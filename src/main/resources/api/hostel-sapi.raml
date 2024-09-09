@@ -1,0 +1,61 @@
+#%RAML 1.0
+title: hostel-sapi.raml
+version: v1
+baseUri: https://localhost:3000/
+
+types:
+  student:
+    type: object
+    properties:
+      firstName: 
+        type: string
+        required: true
+        example: Mohit
+      middleName: 
+        type: string
+        required: false
+        example: Prasad
+      lastName: 
+        type: string
+        required: false
+        example: Choudhary
+      emailId: 
+        type: string
+        required: false
+        example: Mohit@abc.com
+      phoneNumber:
+        type: integer
+        required: true
+        example: 123456
+  studentResponse:
+    type: object
+    properties:
+      status: 
+        type: string
+        example: student added successfully
+          
+        
+/student:
+  post:
+    description: Add a student to database
+    body: 
+      application/json:
+        description: Accept student body 
+        type: student
+    responses:
+      200:
+        body:
+          application/json:
+            type: studentResponse
+      400:
+        body:
+          application/json:
+            example:
+              {
+                status: "Bad Request"
+              }
+            
+         
+    
+    
+      
