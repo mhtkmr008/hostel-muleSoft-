@@ -33,6 +33,10 @@ types:
       status: 
         type: string
         example: student added successfully
+  students:
+    type: array
+    items: student
+      
           
         
 /student:
@@ -54,6 +58,56 @@ types:
               {
                 status: "Bad Request"
               }
+
+  get:
+    description: get all students
+    responses:
+      200:
+        body:
+          application/json:
+            type: students
+
+  /{id}:
+    put:
+      description: update Student by id
+      body: 
+        application/json:
+          description: Accept student body 
+          type: student
+      responses:
+        200:
+          body:
+            application/json:
+              type: studentResponse
+        400:
+          body:
+            application/json:
+              example:
+                {
+                  status: "Bad Request"
+                }
+        
+    get:
+      description: Get Student By ID
+      responses:
+        200:
+          body:
+            application/json:
+              type: student
+
+    delete:
+      description: delete Student by id
+      responses:
+        200:
+          body:
+            application/json:
+              example:
+                {
+                  status: "Student deleted    successfullly"
+                }
+        
+  
+
             
          
     

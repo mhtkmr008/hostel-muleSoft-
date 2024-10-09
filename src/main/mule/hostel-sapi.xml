@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
-http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
     <http:listener-config name="hostel-sapi-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
     <apikit:config name="hostel-sapi-config" api="hostel-sapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
-    <db:config name="Database_Config" doc:name="Database Config" doc:id="a87ac890-4715-4915-a503-0dd2565db075" >
-		<db:my-sql-connection host="localhost" port="3306" user="root" password="abc123" database="hostel" />
-	</db:config>
-	<flow name="hostel-sapi-main">
+    <db:config name="Database_Config" doc:name="Database Config" doc:id="a87ac890-4715-4915-a503-0dd2565db075">
+        <db:my-sql-connection host="localhost" port="3306" user="root" password="abc123" database="hostel" />
+    </db:config>
+    <flow name="hostel-sapi-main">
         <http:listener config-ref="hostel-sapi-httpListenerConfig" path="/api/*">
             <http:response statusCode="#[vars.httpStatus default 200]">
                 <http:headers>#[vars.outboundHeaders default {}]</http:headers>
@@ -129,35 +127,35 @@ output application/json
         </error-handler>
     </flow>
     <flow name="post:\student:application\json:hostel-sapi-config">
-		<scatter-gather doc:name="Scatter-Gather" doc:id="43a18589-7f9d-4095-b48b-2a74bfdae1a1" >
-			<route >
-				<ee:transform doc:name="Transform Message" doc:id="edfc0f70-aa58-4219-8ac2-0f923319f156">
-			<ee:message>
-				<ee:set-payload><![CDATA[%dw 2.0
+        <scatter-gather doc:name="Scatter-Gather" doc:id="43a18589-7f9d-4095-b48b-2a74bfdae1a1">
+            <route>
+                <ee:transform doc:name="Transform Message" doc:id="edfc0f70-aa58-4219-8ac2-0f923319f156">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
 output application/csv 
 ---
 payload]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
-				<file:write doc:name="Write-student-file" doc:id="b29697dc-5809-4843-9e75-0838eb0702cb" path="C:\Users\mhtkm\OneDrive\Desktop\test\student.csv" mode="APPEND"/>
-			</route>
-			<route >
-				<file:write doc:name="Write" doc:id="3c8635f0-f38b-4e88-b5c8-b5e02d490f10" path="C:\Users\mhtkm\OneDrive\Desktop\test\student.json" mode="APPEND"/>
-			</route>
-			<route >
-				<db:insert doc:name="Insert" doc:id="3b299496-11cb-407c-a485-cd22264a06a1" config-ref="Database_Config">
-					<db:sql ><![CDATA[insert into students (first_name,middle_name,last_name,phone_number,email_id) values (:first_name,:middle_name,:last_name,:phone_number,:email_id)]]></db:sql>
-					<db:input-parameters ><![CDATA[#[{
+                    </ee:message>
+                </ee:transform>
+                <file:write doc:name="Write-student-file" doc:id="b29697dc-5809-4843-9e75-0838eb0702cb" path="C:\Users\mhtkm\OneDrive\Desktop\test\student.csv" mode="APPEND" />
+            </route>
+            <route>
+                <file:write doc:name="Write" doc:id="3c8635f0-f38b-4e88-b5c8-b5e02d490f10" path="C:\Users\mhtkm\OneDrive\Desktop\test\student.json" mode="APPEND" />
+            </route>
+            <route>
+                <db:insert doc:name="Insert" doc:id="3b299496-11cb-407c-a485-cd22264a06a1" config-ref="Database_Config">
+                    <db:sql><![CDATA[insert into students (first_name,middle_name,last_name,phone_number,email_id) values (:first_name,:middle_name,:last_name,:phone_number,:email_id)]]></db:sql>
+                    <db:input-parameters><![CDATA[#[{
 	first_name: payload.firstName,
 	middle_name: payload.middleName,
 	last_name: payload.lastName,
 	phone_number:payload.phoneNumber,
 	email_id:payload.emailId
 }]]]></db:input-parameters>
-				</db:insert>
-			</route>
-		</scatter-gather>
-		<ee:transform>
+                </db:insert>
+            </route>
+        </scatter-gather>
+        <ee:transform>
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -167,5 +165,68 @@ output application/json
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
+    </flow>
+    <flow name="get:\student:hostel-sapi-config">
+        <db:select doc:name="Select" doc:id="89dc70ed-8674-47fe-b35c-505ee7b285ee" config-ref="Database_Config">
+            <db:sql><![CDATA[select * from students]]></db:sql>
+        </db:select>
+        <ee:transform doc:name="Transform Message" doc:id="b5ff90fc-72e9-4780-afa1-bff19400ff5f">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map ((item, index) -> 
+	{
+		firstName: item.first_name,
+		middleName: item.middle_name,
+		lastName: item.last_name,
+		emailId: item.email_id,
+		phoneNumber: item.phone_number
+	}
+)]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="put:\student\(id):application\json:hostel-sapi-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  status: "Bad Request"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="delete:\student\(id):hostel-sapi-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform>
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  status: "Student deleted    successfullly"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\student\(id):hostel-sapi-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <logger level="INFO" message="get:\student\(id):hostel-sapi-config" />
     </flow>
 </mule>
